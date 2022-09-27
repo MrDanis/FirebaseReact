@@ -5,10 +5,17 @@ import React,{useState,useEffect} from 'react';
 import {collection,getDocs} from "firebase/firestore";
 function App() {
 const [user,setUsers] = useState([]);
+const [loading,setloading] = useState(true);
 const userCollectionRef = collection(db,"users");
 useEffect(()=>{
   const getUsers = async() =>{
     const data = await getDocs(userCollectionRef);
+    if(data){
+          setloading(false);
+    }
+    else{
+      setloading(true);
+    }
     console.log(data);
     console.log(data.docs.length)
     data.docs.forEach((doc) => {
@@ -36,6 +43,9 @@ getUsers();
           Learn React
         </a>
         {
+          loading?<p style={{color:'white'}}>
+            Fetching the products......             
+           </p>:
           user&&user.map((item,index)=>
            <p key={index} style={{color:'white'}}>
            {item.name}
